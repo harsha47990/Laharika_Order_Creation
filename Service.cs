@@ -140,7 +140,7 @@ namespace StoresDBCheckService
 
                 while (true)
                 {
-                    MovePath = PhotoPrintFolderPath + @"\" + NextOrderNum + DateTime.Now.ToString("_dd_MM_yyyy");
+                    MovePath = PhotoPrintFolderPath + @"\" + NextOrderNum + DateTime.Now.ToString("_0_dd_MM_yyyy");
                     if (Directory.Exists(MovePath))
                     { NextOrderNum++; }
                     else
@@ -163,7 +163,7 @@ namespace StoresDBCheckService
                 Console.WriteLine("copied to photo print");
                 VerfiyAndRemove(e.FullPath, MovePath);
                 Console.WriteLine("Files Verfied And Folder Removed");
-                CreateNewOrder(Path.GetFileName(MovePath) + "$P_Copied.txt", MovePath);
+                CreateNewOrder(Path.GetFileName(MovePath) + ConfigurationManager.AppSettings["PendingOrder"], MovePath);
                 Console.WriteLine("Order Created!!");
                 
                 GC.Collect();
@@ -189,7 +189,7 @@ namespace StoresDBCheckService
 
                 while (true)
                 {
-                    MovePath = AlbumPrintFolderPath + @"\" + NextOrderNum + DateTime.Now.ToString("_dd_MM_yyyy");
+                    MovePath = AlbumPrintFolderPath + @"\" + NextOrderNum + DateTime.Now.ToString("_1_dd_MM_yyyy");
                     if (Directory.Exists(MovePath))
                     { NextOrderNum++; }
                     else
@@ -211,7 +211,7 @@ namespace StoresDBCheckService
                 Console.WriteLine("copied to Album print");
                 VerfiyAndRemove(e.FullPath, MovePath);
                 Console.WriteLine("Files Verfied And Folder Removed");
-                CreateNewOrder(Path.GetFileName(MovePath) + "$A_Copied.txt", MovePath);
+                CreateNewOrder(Path.GetFileName(MovePath) + ConfigurationManager.AppSettings["PendingOrder"], MovePath);
                 Console.WriteLine("Order created!!!");
                 GC.Collect();
                

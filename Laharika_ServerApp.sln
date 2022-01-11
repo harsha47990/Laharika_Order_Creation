@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laharika_OrderCreation", "Laharika_OrderCreation.csproj", "{EC6CA157-F32F-4902-9154-51CFCC146504}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Laharika_ServerApp", "Laharika_ServerApp.csproj", "{EC6CA157-F32F-4902-9154-51CFCC146504}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
