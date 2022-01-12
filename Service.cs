@@ -32,15 +32,15 @@ namespace StoresDBCheckService
         //= "Data Source=jliq-sql012A,51001;Initial Catalog = StoresCheckService; User ID = it3testuser; Password = Shell@123;";
         public Service()
         {
+            Log("service Started");
             ReadConfigSettings();
-            /*
             int timeout = 60000 * 60;
             timeout = 60000*1;
             timer = new System.Timers.Timer(timeout);
             timer.Elapsed += TimerElapsed;
             timer.AutoReset = true;
             timer.Enabled = true;
-            */
+            
            
         }
         private static void Setup()
@@ -52,6 +52,8 @@ namespace StoresDBCheckService
 
         public void Start()
         {
+            Log("service Started");
+            ReadConfigSettings();
             Setup();
         }
 
@@ -304,7 +306,7 @@ namespace StoresDBCheckService
         private static void Log(string Message)
         {
             string fpath = LogPath + @"\log.txt";
-            File.AppendAllText(fpath, Message + "\n");
+            File.AppendAllText(fpath, DateTime.Now.ToString()+" : " + Message + "\n");
         }
         public void Stop()
         {
