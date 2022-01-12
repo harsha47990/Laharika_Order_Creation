@@ -19,7 +19,7 @@ namespace StoresDBCheckService
     {
        
         public static string PhotoWatchFolder,AlbumWatchFolder, TimerEventCopyPasteSources, TimerEventCopyPasteDestinations;
-        public static string OrderDetailsFolder,PhotoPrintFolderPath,AlbumPrintFolderPath;
+        public static string OrderDetailsFolder,PhotoPrintFolderPath,AlbumPrintFolderPath,LogPath;
         private static FileSystemWatcher Photowatcher, Albumewatcher;
         public static string FileNames, SkipPhoto,SkipAlbum;
         public static int FilesCount, ArchiveDayCount;
@@ -33,12 +33,14 @@ namespace StoresDBCheckService
         public Service()
         {
             ReadConfigSettings();
+            /*
             int timeout = 60000 * 60;
             timeout = 60000*1;
             timer = new System.Timers.Timer(timeout);
             timer.Elapsed += TimerElapsed;
             timer.AutoReset = true;
             timer.Enabled = true;
+            */
            
         }
         private static void Setup()
@@ -64,6 +66,7 @@ namespace StoresDBCheckService
             TimerEventCopyPasteSources = ConfigurationManager.AppSettings["TimerEventCopyPasteSources"].ToString();
             TimerEventCopyPasteDestinations = ConfigurationManager.AppSettings["TimerEventCopyPasteDestinations"].ToString();
             ArchiveDayCount = Convert.ToInt32(ConfigurationManager.AppSettings["ArchiveDayCount"]);
+            LogPath = ConfigurationManager.AppSettings["LogPath"];
         }
 
         private static void TimerElapsed(Object source, ElapsedEventArgs e)
@@ -135,7 +138,7 @@ namespace StoresDBCheckService
                 if (e.FullPath == SkipPhoto)
                 { return; }
                 int NextOrderNum = 1;
-                Console.WriteLine(e.FullPath);
+                Log(e.FullPath);
                 string MovePath = String.Empty;
 
                 while (true)
@@ -160,11 +163,11 @@ namespace StoresDBCheckService
                 SkipPhoto = MovePath;
                 Directory.CreateDirectory(MovePath);
                 CopyFilesRecursively(e.FullPath, MovePath);
-                Console.WriteLine("copied to photo print");
+                Log("copied to photo print");
                 VerfiyAndRemove(e.FullPath, MovePath);
-                Console.WriteLine("Files Verfied And Folder Removed");
+                Log("Files Verfied And Folder Removed");
                 CreateNewOrder(Path.GetFileName(MovePath) + ConfigurationManager.AppSettings["PendingOrder"], MovePath);
-                Console.WriteLine("Order Created!!");
+                Log("Order Created!!");
                 
                 GC.Collect();
 
@@ -172,7 +175,7 @@ namespace StoresDBCheckService
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log(ex.Message);
             }
         }
 
@@ -184,7 +187,7 @@ namespace StoresDBCheckService
                 { return; }
 
                 int NextOrderNum = 1;
-                Console.WriteLine(e.FullPath);
+                Log(e.FullPath);
                 string MovePath = String.Empty;
 
                 while (true)
@@ -208,23 +211,23 @@ namespace StoresDBCheckService
                 SkipAlbum = MovePath;
                 Directory.CreateDirectory(MovePath);
                 CopyFilesRecursively(e.FullPath, MovePath);
-                Console.WriteLine("copied to Album print");
+                Log("copied to Album print");
                 VerfiyAndRemove(e.FullPath, MovePath);
-                Console.WriteLine("Files Verfied And Folder Removed");
+                Log("Files Verfied And Folder Removed");
                 CreateNewOrder(Path.GetFileName(MovePath) + ConfigurationManager.AppSettings["PendingOrder"], MovePath);
-                Console.WriteLine("Order created!!!");
+                Log("Order created!!!");
                 GC.Collect();
                
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log(ex.Message);
             }
         }
 
         private static void OnError(object sender, ErrorEventArgs e)
         {
-            Console.WriteLine(e.GetException());
+            Log(e.GetException().ToString());
             Setup();
         }
       
@@ -254,7 +257,7 @@ namespace StoresDBCheckService
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Log(ex.Message);
                 }
             }
 
@@ -298,6 +301,11 @@ namespace StoresDBCheckService
             }
         }
 
+        private static void Log(string Message)
+        {
+            string fpath = LogPath + @"\log.txt";
+            File.AppendAllText(fpath, Message + "\n");
+        }
         public void Stop()
         {
             // write code here that runs when the Windows Service stops.  
