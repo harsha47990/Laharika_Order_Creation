@@ -142,7 +142,7 @@ namespace StoresDBCheckService
 
                 while (true)
                 {
-                    MovePath = PhotoPrintFolderPath + @"\" + NextOrderNum + DateTime.Now.ToString("_0_dd_MM_yyyy");
+                    MovePath = PhotoPrintFolderPath + @"\"+ DateTime.Now.ToString("2_yyyy_MM_dd_") + NextOrderNum;
                     if (Directory.Exists(MovePath))
                     { NextOrderNum++; }
                     else
@@ -188,10 +188,10 @@ namespace StoresDBCheckService
                 int NextOrderNum = 1;
                 Log(e.FullPath);
                 string MovePath = String.Empty;
-
+               
                 while (true)
                 {
-                    MovePath = AlbumPrintFolderPath + @"\" + NextOrderNum + DateTime.Now.ToString("_1_dd_MM_yyyy");
+                    MovePath = AlbumPrintFolderPath + @"\" + DateTime.Now.ToString("1_yyyy_MM_dd_") + NextOrderNum;
                     if (Directory.Exists(MovePath))
                     { NextOrderNum++; }
                     else
