@@ -9,9 +9,6 @@ using System.Data;
 using System.IO;
 using System.Threading;
 using System.Timers;
-using System.Security.Principal;
-using System.Security.AccessControl;
-using ClosedXML.Excel;
 
 namespace StoresDBCheckService
 {
