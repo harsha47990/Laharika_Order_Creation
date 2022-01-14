@@ -247,12 +247,15 @@ namespace StoresDBCheckService
             {
                 files[i] = Path.GetFileName(files[i]);
             }
+            string waitMsg = Path.GetFileNameWithoutExtension(OrderDetailsPath) + "Wait.txt";
+            waitMsg = Path.Combine(OrderDetailsFolder, waitMsg);
             string FilePath = Path.Combine(OrderDetailsFolder, OrderDetailsPath);
           
-             File.AppendAllText(FilePath, $"Folder Name : {Path.GetFileName(CopiedFilePath)}\n");
-             File.AppendAllText(FilePath, $"Files Count : {files.Length}\n");
+             File.AppendAllText(waitMsg, $"Folder Name : {Path.GetFileName(CopiedFilePath)}\n");
+             File.AppendAllText(waitMsg, $"Files Count : {files.Length}\n");
              string CommaSeperatedFileNames = string.Join(",", files);
-             File.AppendAllText(FilePath, $"Files : {CommaSeperatedFileNames}\n");
+             File.AppendAllText(waitMsg, $"Files : {CommaSeperatedFileNames}\n");
+             File.Move(waitMsg, FilePath);
         }
 
         private static void VerfiyAndRemove(string source, string destination)
