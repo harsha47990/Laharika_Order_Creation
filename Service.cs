@@ -18,11 +18,11 @@ namespace StoresDBCheckService
         public static string PhotoWatchFolder,AlbumWatchFolder, TimerEventCopyPasteSources, TimerEventCopyPasteDestinations;
         public static string OrderDetailsFolder,PhotoPrintFolderPath,AlbumPrintFolderPath,LogPath;
         private static FileSystemWatcher Photowatcher, Albumewatcher;
-        public static string FileNames, SkipPhoto,SkipAlbum;
+        public static string FileNames;
         public static int FilesCount, ArchiveDayCount;
         public static System.Timers.Timer timer;
 
-
+        private static List<string> CopiedFiles = new List<string>();
         public static string SQLConnectionString;
         public static DataTable ExcelData;
         public static bool ChangeDay = true;
@@ -98,9 +98,9 @@ namespace StoresDBCheckService
         {
             foreach (string path in Directory.GetDirectories(sourcePath))
             {
-                string order = Path.GetFileName(path);
-                string[] digits = order.Split('_');
-                var orderdate = DateTime.ParseExact($"{digits[1]}/{digits[2]}/{digits[3]}", "dd/MM/yyyy", null);
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                var orderdate = directoryInfo.CreationTime;
+                
                 if((DateTime.Now - orderdate).Days > 90)
                 {
                     Directory.Delete(path, true);
@@ -129,12 +129,24 @@ namespace StoresDBCheckService
             Albumewatcher.Error += OnError;
         }
       
-
+        private static bool CheckFolderRecursiveUsingOrderDetials(string Fullpath)
+        {
+            string FolderName = Path.GetFileName(Fullpath);
+            var files = Directory.GetFiles(OrderDetailsFolder, "*", SearchOption.AllDirectories);
+            foreach(var file in files)
+            {
+                if(Path.GetFileName(file).StartsWith(FolderName))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         private static void PhotoOnCreated(object sender, FileSystemEventArgs e)
         {
             try
             {
-                if (e.FullPath == SkipPhoto)
+                if (CheckFolderRecursiveUsingOrderDetials(e.FullPath))
                 { return; }
                 int NextOrderNum = 1;
                 Log(e.FullPath);
@@ -157,9 +169,7 @@ namespace StoresDBCheckService
                     if (fCountA == fCountB)
                     { break; }
                 }
-                
-              
-                SkipPhoto = MovePath;
+               
                 Directory.CreateDirectory(MovePath);
                 CopyFilesRecursively(e.FullPath, MovePath);
                 Log("copied to photo print");
@@ -182,7 +192,7 @@ namespace StoresDBCheckService
         {
             try
             {
-                if (e.FullPath == SkipAlbum)
+                if (CheckFolderRecursiveUsingOrderDetials(e.FullPath))
                 { return; }
 
                 int NextOrderNum = 1;
@@ -207,7 +217,6 @@ namespace StoresDBCheckService
                     { break; }
                 }
 
-                SkipAlbum = MovePath;
                 Directory.CreateDirectory(MovePath);
                 CopyFilesRecursively(e.FullPath, MovePath);
                 Log("copied to Album print");
