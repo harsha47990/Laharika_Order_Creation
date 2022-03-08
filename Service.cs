@@ -187,7 +187,6 @@ namespace StoresDBCheckService
                 Log(ex.Message);
             }
         }
-
         private static void AlbumOnCreated(object sender, FileSystemEventArgs e)
         {
             try
@@ -314,7 +313,7 @@ namespace StoresDBCheckService
 
         private static void Log(string Message)
         {
-            string fpath = LogPath + @"\log.txt";
+            string fpath = LogPath + @"\"+DateTime.Now.ToShortDateString()+"_log.txt";
             File.AppendAllText(fpath, DateTime.Now.ToString()+" : " + Message + "\n");
         }
         public void Stop()
