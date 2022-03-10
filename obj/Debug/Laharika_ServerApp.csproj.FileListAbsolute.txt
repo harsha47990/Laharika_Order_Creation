@@ -7,4 +7,4 @@ D:\others\Laharika\Laharika_Order_Creation\bin\Debug\Topshelf.xml
 D:\others\Laharika\Laharika_Order_Creation\obj\Debug\Laharika_ServerApp.csproj.CoreCompileInputs.cache
 D:\others\Laharika\Laharika_Order_Creation\obj\Debug\Laharika_ServerApp.exe
 D:\others\Laharika\Laharika_Order_Creation\obj\Debug\Laharika_ServerApp.pdb
-D:\others\Laharika\Laharika_Order_Creation\obj\Debug\Laharika_ServerApp.csproj.AssemblyReference.cache
+D:\others\Laharika\Laharika_Order_Creation\obj\Debug\Laharika_ServerApp.csproj.CopyComplete
