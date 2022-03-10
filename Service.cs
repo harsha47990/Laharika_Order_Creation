@@ -20,7 +20,7 @@ namespace StoresDBCheckService
         public static string OrderDetailsFolder,PhotoPrintFolderPath,AlbumPrintFolderPath,LogPath, ArchivePath;
         private static FileSystemWatcher Photowatcher, Albumewatcher;
         public static string FileNames, ArchiveStatusCodes,AlbumCode = "1", PhotoCode = "2";
-        public static int FilesCount, ArchiveLimitDays;
+        public static int FilesCount, ArchiveLimitDays, TimeIntervalMin;
         public static System.Timers.Timer timer;
 
         private static List<string> CopiedFiles = new List<string>();
@@ -31,7 +31,7 @@ namespace StoresDBCheckService
         {
             Log("service Started");
             ReadConfigSettings();
-            int timeout = 60000 * 5;
+            int timeout = 60000 * TimeIntervalMin;
             timer = new System.Timers.Timer(timeout);
             timer.Elapsed += TimerElapsed;
             timer.AutoReset = true;
@@ -96,6 +96,7 @@ namespace StoresDBCheckService
             ArchiveStatusCodes = ConfigurationManager.AppSettings["ArchiveStatusCodes"];
             ArchivePath = ConfigurationManager.AppSettings["ArchivePath"];
             ArchiveLimitDays = Convert.ToInt32(ConfigurationManager.AppSettings["ArchiveLimitDays"]);
+            TimeIntervalMin = Convert.ToInt32(ConfigurationManager.AppSettings["TimeIntervalMin"]);
             LogPath = ConfigurationManager.AppSettings["LogPath"];
         }
 
@@ -157,9 +158,13 @@ namespace StoresDBCheckService
             {
                 if (checkcodes.Contains(Path.GetFileNameWithoutExtension(order).Split('$')[1]))
                 {
-                    Log("Moving file from " + Path.Combine(sourcePath, Path.GetFileNameWithoutExtension(order).Split('$')[0]) + " Destination : " + ArchivePath);
-                    CopyFilesRecursively(Path.Combine(sourcePath,Path.GetFileNameWithoutExtension(order).Split('$')[0]),ArchivePath);
-                    VerfiyAndRemove(Path.Combine(sourcePath, Path.GetFileNameWithoutExtension(order).Split('$')[0]), ArchivePath);
+                     if(Directory.Exists(Path.Combine(sourcePath, Path.GetFileNameWithoutExtension(order).Split('$')[0])))
+                    {
+                        Log("Moving file from " + Path.Combine(sourcePath, Path.GetFileNameWithoutExtension(order).Split('$')[0]) + " Destination : " + ArchivePath);
+                        CopyFilesRecursively(Path.Combine(sourcePath, Path.GetFileNameWithoutExtension(order).Split('$')[0]), ArchivePath);
+                        VerfiyAndRemove(Path.Combine(sourcePath, Path.GetFileNameWithoutExtension(order).Split('$')[0]), ArchivePath);
+                    }
+                    
                 }
             }
 
