@@ -39,35 +39,7 @@ namespace StoresDBCheckService
             
         }
 
-        private static void Email(string msg)
-        {
-            string to = ConfigurationManager.AppSettings["AlertToEmail"]; //To address    
-            string from = ConfigurationManager.AppSettings["EmailId"]; //From address
-            string pass = ConfigurationManager.AppSettings["Password"];
-            MailMessage message = new MailMessage(from, to);
-
-            string mailbody = msg;
-            message.Subject = "Error in Laharika Service Application";
-            message.Body = mailbody;
-            message.BodyEncoding = Encoding.UTF8;
-            message.IsBodyHtml = true;
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
-            System.Net.NetworkCredential basicCredential1 = new
-            System.Net.NetworkCredential(from, pass);
-            client.EnableSsl = true;
-            client.UseDefaultCredentials = false;
-            client.Credentials = basicCredential1;
-            try
-            {
-                client.Send(message);
-            }
-
-            catch (Exception ex)
-            {
-                Log("Error Sending Email : " + ex.Message);
-                //throw ex;
-            }
-        }
+     
         private static void Setup()
         {
             ReadConfigSettings();
@@ -457,6 +429,36 @@ namespace StoresDBCheckService
         {
             string fpath = LogPath + @"\"+DateTime.Now.ToString("dd_MM_yyyy")+"_ServiceApp_log.txt";
             File.AppendAllText(fpath, DateTime.Now.ToString()+" : " + Message + "\n");
+        }
+
+        private static void Email(string msg)
+        {
+            string to = ConfigurationManager.AppSettings["AlertToEmail"]; //To address    
+            string from = ConfigurationManager.AppSettings["EmailId"]; //From address
+            string pass = ConfigurationManager.AppSettings["Password"];
+            MailMessage message = new MailMessage(from, to);
+
+            string mailbody = msg;
+            message.Subject = "Error in Laharika Service Application";
+            message.Body = mailbody;
+            message.BodyEncoding = Encoding.UTF8;
+            message.IsBodyHtml = true;
+            SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
+            System.Net.NetworkCredential basicCredential1 = new
+            System.Net.NetworkCredential(from, pass);
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Credentials = basicCredential1;
+            try
+            {
+                client.Send(message);
+            }
+
+            catch (Exception ex)
+            {
+                Log("Error Sending Email : " + ex.Message);
+                //throw ex;
+            }
         }
         public void Stop()
         {
